@@ -1,0 +1,14 @@
+/* Custom CSS if needed, complementing Tailwind.
+   For this basic setup, Tailwind classes in index.html are doing most of the work. */
+
+/* Ensure the body and html take up full height */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+/* Inter font from Google Fonts (defined in index.html head) */
+.font-inter {
+    font-family: 'Inter', sans-serif;
+}

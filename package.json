@@ -1,0 +1,21 @@
+{
+  "name": "synergy",
+  "version": "1.0.0",
+  "description": "An integrated Pomodoro and To-Do application.",
+  "main": "index.js",
+  "scripts": {
+    "start": "http-server .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "productivity",
+    "pomodoro",
+    "todo",
+    "javascript"
+  ],
+  "author": "Cynthia M",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}
