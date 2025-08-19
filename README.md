@@ -112,4 +112,5 @@ Distributed under the MIT License. See LICENSE for more information.
 Cynthia Motaung - cynthiamotaung015@gmail.com
 
 Project Link: https://github.com/Cynthia-Motaung/synergy
+
 Live Demo: https://synergy-to-do.netlify.app/
