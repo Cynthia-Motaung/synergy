@@ -1,4 +1,5 @@
 📝 Synergy: Pomodoro & To-Do App
+
 Synergy is an all-in-one desktop productivity tool designed to help you manage your tasks effectively and stay focused using the Pomodoro Technique. It seamlessly integrates your to-do lists with a Pomodoro timer, providing a streamlined experience for planning and executing your work.
 
 ✨ Features
@@ -111,3 +112,4 @@ Distributed under the MIT License. See LICENSE for more information.
 Cynthia Motaung - cynthiamotaung015@gmail.com
 
 Project Link: https://github.com/Cynthia-Motaung/synergy
+Live Demo: https://synergy-to-do.netlify.app/
