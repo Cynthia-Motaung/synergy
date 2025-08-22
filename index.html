@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Synergy </title>
+    <title>Synergy - Full Screen Pomodoro Timer</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
     <link rel="shortcut icon" href="https://cdn-icons-png.flaticon.com/128/14118/14118018.png" type="image/png">
     <style>
-        /* Glassmorphic Styles */
+        /* Glassmorphic Full Screen Styles */
         :root {
             --primary: #7c73d9;
             --primary-light: #938cff;
@@ -17,7 +17,7 @@
             --accent: #ff758c;
             --text: #2d3436;
             --text-light: #636e72;
-            --glass-light: rgba(255, 255, 255, 0.75);
+            --glass-light: rgba(255, 255, 255, 0.8);
             --glass-dark: rgba(255, 255, 255, 0.25);
             --glass-border: rgba(255, 255, 255, 0.4);
             --glass-shadow: rgba(0, 0, 0, 0.1);
@@ -33,30 +33,62 @@
             font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: var(--text);
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             background: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
-            padding: 20px;
+            padding: 0;
             line-height: 1.6;
+            overflow: hidden;
+        }
+
+        .background-blobs {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.4;
+        }
+
+        .blob-1 {
+            width: 500px;
+            height: 500px;
+            background: var(--primary-light);
+            top: -200px;
+            left: -100px;
+        }
+
+        .blob-2 {
+            width: 600px;
+            height: 600px;
+            background: var(--secondary);
+            bottom: -250px;
+            right: -100px;
+        }
+
+        .blob-3 {
+            width: 400px;
+            height: 400px;
+            background: var(--accent);
+            top: 50%;
+            left: 40%;
         }
 
         .container {
-            background: rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            padding: 2.5rem;
             width: 100%;
-            max-width: 900px;
-            margin: 0 auto;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
         }
 
         header {
             text-align: center;
-            margin-bottom: 2.5rem;
+            margin-bottom: 1.5rem;
+            padding-top: 1rem;
         }
 
         h1 {
@@ -77,8 +109,10 @@
 
         .app-container {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr 1.5fr;
             gap: 2.5rem;
+            flex-grow: 1;
+            max-height: calc(100vh - 180px);
         }
 
         h2 {
@@ -96,12 +130,21 @@
         /* Glassmorphic Card Styles */
         .todo-container, .timer-container {
             background: var(--glass-light);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             border: 1px solid var(--glass-border);
             border-radius: 20px;
             padding: 1.5rem;
-            box-shadow: 0 4px 20px var(--glass-shadow);
+            box-shadow: 0 8px 32px var(--glass-shadow);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .timer-container {
+            justify-content: space-between;
+            align-items: center;
+            text-align: center;
         }
 
         /* Button Styles */
@@ -290,8 +333,8 @@
         #task-list {
             list-style: none;
             padding: 0;
-            max-height: 300px;
             overflow-y: auto;
+            flex-grow: 1;
             scrollbar-width: thin;
             scrollbar-color: var(--primary) rgba(255, 255, 255, 0.5);
         }
@@ -359,10 +402,12 @@
         }
 
         /* Timer Section */
-        .timer-container {
+        .timer-content {
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
+            flex-grow: 1;
         }
 
         .task-display-container {
@@ -373,6 +418,7 @@
             width: 100%;
             text-align: center;
             border: 1px solid var(--glass-border);
+            max-width: 400px;
         }
 
         #current-task-display {
@@ -385,7 +431,7 @@
         }
 
         #timer-display {
-            font-size: 5.5rem;
+            font-size: 6rem;
             font-weight: 700;
             color: var(--primary-dark);
             margin: 1.5rem 0;
@@ -415,6 +461,7 @@
             padding: 2rem;
             text-align: center;
             color: var(--text-light);
+            height: 100%;
         }
 
         .empty-state i {
@@ -449,23 +496,54 @@
         }
 
         /* Responsive Design */
-        @media (max-width: 768px) {
-            .container {
-                padding: 1.5rem;
-            }
-            
+        @media (max-width: 968px) {
             .app-container {
                 grid-template-columns: 1fr;
-                gap: 2rem;
+                gap: 1.5rem;
             }
             
             #timer-display {
-                font-size: 4rem;
+                font-size: 4.5rem;
             }
             
             .timer-controls .btn {
                 min-width: 50px;
                 height: 50px;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #timer-display {
+                font-size: 3.5rem;
+            }
+            
+            .timer-controls {
+                gap: 0.5rem;
+            }
+            
+            .timer-modes {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .todo-form {
+                flex-direction: column;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            h2 {
+                font-size: 1.3rem;
             }
         }
 
@@ -493,6 +571,12 @@
     </style>
 </head>
 <body>
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+    
     <div class="container">
         <header>
             <h1><i class="fas fa-infinity"></i> Synergy</h1>
@@ -514,20 +598,22 @@
             </div>
 
             <div class="timer-container">
-                <h2><i class="fa-solid fa-hourglass-half"></i> Timer</h2>
-                <div class="task-display-container">
-                    <p id="current-task-display">Select a task to begin</p>
-                </div>
-                <div id="timer-display">25:00</div>
-                <div class="timer-controls">
-                    <button id="start-btn" class="btn btn-success"><i class="fas fa-play"></i></button>
-                    <button id="pause-btn" class="btn btn-warning"><i class="fas fa-pause"></i></button>
-                    <button id="reset-btn" class="btn btn-danger"><i class="fas fa-redo"></i></button>
-                </div>
-                <div class="timer-modes">
-                    <button class="mode-btn active" data-time="1500">Pomodoro</button>
-                    <button class="mode-btn" data-time="300">Short Break</button>
-                    <button class="mode-btn" data-time="900">Long Break</button>
+                <div class="timer-content">
+                    <h2><i class="fa-solid fa-hourglass-half"></i> Timer</h2>
+                    <div class="task-display-container">
+                        <p id="current-task-display">Select a task to begin</p>
+                    </div>
+                    <div id="timer-display">25:00</div>
+                    <div class="timer-controls">
+                        <button id="start-btn" class="btn btn-success"><i class="fas fa-play"></i></button>
+                        <button id="pause-btn" class="btn btn-warning"><i class="fas fa-pause"></i></button>
+                        <button id="reset-btn" class="btn btn-danger"><i class="fas fa-redo"></i></button>
+                    </div>
+                    <div class="timer-modes">
+                        <button class="mode-btn active" data-time="1500">Pomodoro</button>
+                        <button class="mode-btn" data-time="300">Short Break</button>
+                        <button class="mode-btn" data-time="900">Long Break</button>
+                    </div>
                 </div>
             </div>
         </div>
