@@ -3,23 +3,505 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Synergy</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Synergy </title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
     <link rel="shortcut icon" href="https://cdn-icons-png.flaticon.com/128/14118/14118018.png" type="image/png">
-    <link rel="icon" href="https://cdn-icons-png.flaticon.com/128/14118/14118018.png" type="image/png">
+    <style>
+        /* Glassmorphic Styles */
+        :root {
+            --primary: #7c73d9;
+            --primary-light: #938cff;
+            --primary-dark: #645cb4;
+            --secondary: #6dd5ed;
+            --accent: #ff758c;
+            --text: #2d3436;
+            --text-light: #636e72;
+            --glass-light: rgba(255, 255, 255, 0.75);
+            --glass-dark: rgba(255, 255, 255, 0.25);
+            --glass-border: rgba(255, 255, 255, 0.4);
+            --glass-shadow: rgba(0, 0, 0, 0.1);
+        }
 
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        h1 {
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+            font-size: 2.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-weight: 700;
+        }
+
+        .tagline {
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        .app-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5rem;
+        }
+
+        h2 {
+            color: var(--primary-dark);
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 600;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        /* Glassmorphic Card Styles */
+        .todo-container, .timer-container {
+            background: var(--glass-light);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px var(--glass-shadow);
+        }
+
+        /* Button Styles */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.7);
+            color: var(--primary-dark);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn i {
+            font-size: 0.9em;
+        }
+
+        /* Primary Button */
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Success Button */
+        .btn-success {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #4fc3dc;
+        }
+
+        /* Warning Button */
+        .btn-warning {
+            background: #ff9a8b;
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #ff8875;
+        }
+
+        /* Danger Button */
+        .btn-danger {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #ff5d79;
+        }
+
+        /* Mode Buttons */
+        .mode-btn {
+            padding: 0.6rem 1.5rem;
+            border: none;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.6);
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .mode-btn:hover {
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .mode-btn.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 2px 8px rgba(124, 115, 217, 0.4);
+        }
+
+        /* Task Action Buttons */
+        .task-actions button {
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 1rem;
+            color: var(--text-light);
+            transition: all 0.3s;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .task-actions button:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .task-actions button:first-child:hover {
+            color: var(--secondary);
+        }
+
+        .task-actions button:last-child:hover {
+            color: var(--accent);
+        }
+
+        /* Timer Control Buttons */
+        .timer-controls .btn {
+            min-width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            padding: 0.5rem;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .timer-controls .btn i {
+            font-size: 1.5rem;
+        }
+
+        /* Add Task Button */
+        #add-task-btn {
+            min-width: 100px;
+        }
+
+        /* Focus States */
+        .btn:focus, 
+        .mode-btn:focus, 
+        .task-actions button:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(124, 115, 217, 0.3);
+        }
+
+        /* Disabled State */
+        .btn:disabled {
+            background-color: rgba(255, 255, 255, 0.4);
+            color: #aaa;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        /* To-Do Section */
+        .todo-form {
+            display: flex;
+            margin-bottom: 1.5rem;
+            gap: 0.75rem;
+        }
+
+        #task-input {
+            flex-grow: 1;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background: rgba(255, 255, 255, 0.7);
+            color: var(--text);
+        }
+
+        #task-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(124, 115, 217, 0.2);
+        }
+
+        #task-input::placeholder {
+            color: var(--text-light);
+            opacity: 0.7;
+        }
+
+        /* Task List */
+        #task-list {
+            list-style: none;
+            padding: 0;
+            max-height: 300px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary) rgba(255, 255, 255, 0.5);
+        }
+
+        #task-list::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #task-list::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+        }
+
+        #task-list::-webkit-scrollbar-thumb {
+            background-color: var(--primary);
+            border-radius: 4px;
+        }
+
+        #task-list li {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 12px;
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        #task-list li:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        #task-list li.selected {
+            background: rgba(124, 115, 217, 0.15);
+            border-left: 4px solid var(--primary);
+            font-weight: 600;
+        }
+
+        #task-list li.completed .task-text {
+            text-decoration: line-through;
+            color: var(--text-light);
+        }
+
+        .task-text {
+            flex-grow: 1;
+            margin-right: 1rem;
+        }
+
+        .pomodoro-count {
+            background: var(--primary);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-right: 1rem;
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* Timer Section */
+        .timer-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .task-display-container {
+            background: rgba(255, 255, 255, 0.6);
+            padding: 0.75rem 1.5rem;
+            border-radius: 20px;
+            margin-bottom: 1.5rem;
+            width: 100%;
+            text-align: center;
+            border: 1px solid var(--glass-border);
+        }
+
+        #current-task-display {
+            color: var(--text-light);
+            font-style: italic;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+        }
+
+        #timer-display {
+            font-size: 5.5rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin: 1.5rem 0;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .timer-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .timer-modes {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        /* Empty State */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            text-align: center;
+            color: var(--text-light);
+        }
+
+        .empty-state i {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .notification.show {
+            opacity: 1;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+            }
+            
+            .app-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            #timer-display {
+                font-size: 4rem;
+            }
+            
+            .timer-controls .btn {
+                min-width: 50px;
+                height: 50px;
+            }
+        }
+
+        /* Pulse Animation for Timer */
+        @keyframes pulse {
+            0% { 
+                box-shadow: 0 0 0 0 rgba(124, 115, 217, 0.4);
+                transform: scale(1);
+            }
+            50% { 
+                transform: scale(1.02);
+            }
+            70% { 
+                box-shadow: 0 0 0 10px rgba(124, 115, 217, 0);
+            }
+            100% { 
+                box-shadow: 0 0 0 0 rgba(124, 115, 217, 0);
+                transform: scale(1);
+            }
+        }
+
+        .timer-controls .btn.active {
+            animation: pulse 2s infinite;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1><i class="fas fa-rocket"></i> Synergy</h1>
+            <h1><i class="fas fa-infinity"></i> Synergy</h1>
             <p class="tagline">Your personal hub for focus and productivity.</p>
         </header>
 
         <div class="app-container">
             <div class="todo-container">
-                <h2><i class="fa-solid fa-check"></i> My Tasks</h2>
+                <h2><i class="fa-solid fa-list-check"></i> My Tasks</h2>
                 <div class="todo-form">
                     <input type="text" id="task-input" placeholder="Add a new task...">
                     <button id="add-task-btn" class="btn btn-primary">
@@ -27,11 +509,12 @@
                     </button>
                 </div>
                 <ul id="task-list">
+                    <!-- Tasks will be rendered here -->
                 </ul>
             </div>
 
             <div class="timer-container">
-                <h2><i class="fa-solid fa-stopwatch-20"></i> Timer</h2>
+                <h2><i class="fa-solid fa-hourglass-half"></i> Timer</h2>
                 <div class="task-display-container">
                     <p id="current-task-display">Select a task to begin</p>
                 </div>
@@ -50,6 +533,277 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        // DOM Element References
+        const taskInput = document.getElementById('task-input');
+        const addTaskBtn = document.getElementById('add-task-btn');
+        const taskList = document.getElementById('task-list');
+        const currentTaskDisplay = document.getElementById('current-task-display');
+        const timerDisplay = document.getElementById('timer-display');
+        const startBtn = document.getElementById('start-btn');
+        const pauseBtn = document.getElementById('pause-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const modeButtons = document.querySelectorAll('.mode-btn');
+
+        // App State
+        let tasks = [];
+        let selectedTaskId = null;
+        let timerInterval = null;
+        let timeLeft = 25 * 60; // 25 minutes in seconds
+        let isPaused = true;
+        const notificationSound = new Audio('https://www.soundjay.com/buttons/sounds/button-16.mp3');
+
+        // Initialize the app
+        function init() {
+            loadTasks();
+            renderTasks();
+            updateTimerDisplay();
+            updateButtonStates();
+            setupEventListeners();
+        }
+
+        // Load tasks from localStorage
+        function loadTasks() {
+            const savedTasks = localStorage.getItem('synergy-tasks');
+            if (savedTasks) {
+                tasks = JSON.parse(savedTasks);
+            }
+        }
+
+        // Save tasks to localStorage
+        function saveTasks() {
+            localStorage.setItem('synergy-tasks', JSON.stringify(tasks));
+        }
+
+        // === Task Management Functions ===
+        function renderTasks() {
+            taskList.innerHTML = '';
+            
+            if (tasks.length === 0) {
+                const emptyState = document.createElement('li');
+                emptyState.className = 'empty-state';
+                emptyState.innerHTML = `
+                    <i class="fas fa-clipboard-list"></i>
+                    <p>No tasks yet. Add one to get started!</p>
+                `;
+                taskList.appendChild(emptyState);
+                return;
+            }
+
+            tasks.forEach(task => {
+                const li = document.createElement('li');
+                li.setAttribute('data-id', task.id);
+                li.className = task.completed ? 'completed' : '';
+                if (task.id === selectedTaskId) {
+                    li.classList.add('selected');
+                }
+
+                li.innerHTML = `
+                    <span class="task-text">${task.text}</span>
+                    <span class="pomodoro-count">${task.pomodoros} <i class="fas fa-clock"></i></span>
+                    <div class="task-actions">
+                        <button class="complete-btn" title="Complete">
+                            <i class="fas fa-check"></i>
+                        </button>
+                        <button class="delete-btn" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+
+                li.querySelector('.complete-btn').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    toggleTaskComplete(task.id);
+                });
+
+                li.querySelector('.delete-btn').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    deleteTask(task.id);
+                });
+
+                li.addEventListener('click', () => {
+                    selectTask(task.id);
+                });
+                
+                taskList.appendChild(li);
+            });
+        }
+
+        function addTask() {
+            const text = taskInput.value.trim();
+            if (text) {
+                const newTask = {
+                    id: Date.now(),
+                    text: text,
+                    completed: false,
+                    pomodoros: 0
+                };
+                tasks.push(newTask);
+                taskInput.value = '';
+                saveTasks();
+                renderTasks();
+                // Auto-select the new task if none is selected
+                if (!selectedTaskId) {
+                    selectTask(newTask.id);
+                }
+            }
+        }
+
+        function toggleTaskComplete(id) {
+            tasks = tasks.map(task => 
+                task.id === id ? { ...task, completed: !task.completed } : task
+            );
+            saveTasks();
+            renderTasks();
+        }
+
+        function deleteTask(id) {
+            tasks = tasks.filter(task => task.id !== id);
+            saveTasks();
+            if (selectedTaskId === id) {
+                selectedTaskId = null;
+                currentTaskDisplay.textContent = 'Select a task to begin';
+                resetTimer();
+            }
+            renderTasks();
+        }
+
+        function selectTask(id) {
+            selectedTaskId = id;
+            const selectedTask = tasks.find(task => task.id === selectedTaskId);
+            currentTaskDisplay.textContent = `Focusing on: ${selectedTask.text}`;
+            renderTasks();
+        }
+
+        function updateButtonStates() {
+            // Disable start button when timer is running
+            startBtn.disabled = !isPaused;
+            
+            // Disable pause button when timer is not running
+            pauseBtn.disabled = isPaused;
+            
+            // Add/remove active class based on state
+            if (!isPaused) {
+                startBtn.classList.remove('active');
+                pauseBtn.classList.add('active');
+            } else {
+                startBtn.classList.add('active');
+                pauseBtn.classList.remove('active');
+            }
+        }
+
+        // Modify the timer functions to call updateButtonStates
+        function startTimer() {
+            if (!selectedTaskId) {
+                alert('Please select a task to focus on first!');
+                return;
+            }
+            if (isPaused) {
+                isPaused = false;
+                updateButtonStates();
+                timerInterval = setInterval(() => {
+                    timeLeft--;
+                    updateTimerDisplay();
+                    if (timeLeft <= 0) {
+                        clearInterval(timerInterval);
+                        notificationSound.play();
+                        showCompletionNotification();
+                        incrementPomodoro();
+                        resetTimer();
+                        updateButtonStates();
+                    }
+                }, 1000);
+            }
+        }
+
+        function pauseTimer() {
+            isPaused = true;
+            clearInterval(timerInterval);
+            updateButtonStates();
+        }
+
+        function resetTimer() {
+            pauseTimer();
+            timeLeft = 25 * 60;
+            updateTimerDisplay();
+            updateButtonStates();
+        }
+
+        // === Timer Functions ===
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            // Visual feedback when time is running low
+            if (timeLeft <= 60) {
+                timerDisplay.style.color = 'var(--accent)';
+            } else {
+                timerDisplay.style.color = 'var(--primary-dark)';
+            }
+        }
+
+        function incrementPomodoro() {
+            if (selectedTaskId) {
+                tasks = tasks.map(task =>
+                    task.id === selectedTaskId ? { ...task, pomodoros: task.pomodoros + 1 } : task
+                );
+                saveTasks();
+                renderTasks();
+            }
+        }
+
+        function showCompletionNotification() {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.innerHTML = `
+                <i class="fas fa-check-circle"></i>
+                <p>Pomodoro complete! Time for a break.</p>
+            `;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 10);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }, 3000);
+        }
+
+        function setTimerMode(minutes) {
+            timeLeft = minutes;
+            resetTimer();
+            updateTimerDisplay();
+        }
+
+        // === Event Listeners ===
+        function setupEventListeners() {
+            addTaskBtn.addEventListener('click', addTask);
+            taskInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    addTask();
+                }
+            });
+
+            startBtn.addEventListener('click', startTimer);
+            pauseBtn.addEventListener('click', pauseTimer);
+            resetBtn.addEventListener('click', resetTimer);
+
+            modeButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    modeButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    setTimerMode(parseInt(button.dataset.time));
+                });
+            });
+        }
+
+        // Initialize the app
+        init();
+    </script>
 </body>
 </html>

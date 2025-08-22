@@ -1,15 +1,15 @@
-/* General Styles */
+/* General Styles - StudyWithMe Aesthetic */
 :root {
-    --primary: #4361ee;
-    --primary-dark: #3a0ca3;
-    --secondary: #3f37c9;
-    --success: #4cc9f0;
-    --warning: #f8961e;
-    --danger: #f72585;
-    --light: #f8f9fa;
-    --dark: #212529;
-    --gray: #6c757d;
-    --light-gray: #e9ecef;
+    --primary: #bb86fc;
+    --primary-dark: #9b6cfc;
+    --secondary: #03dac6;
+    --background: #121212;
+    --surface: #1e1e1e;
+    --surface-light: #2d2d2d;
+    --error: #cf6679;
+    --on-background: #ffffff;
+    --on-surface: #ffffff;
+    --on-primary: #000000;
 }
 
 * {
@@ -19,9 +19,9 @@
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-    color: var(--dark);
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--background);
+    color: var(--on-background);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -32,10 +32,10 @@ body {
 
 /* Container Styles */
 .container {
-    background-color: #ffffff;
-    padding: 2rem;
-    border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    background-color: var(--surface);
+    padding: 2.5rem;
+    border-radius: 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     width: 100%;
     max-width: 800px;
     margin: 2rem;
@@ -43,46 +43,48 @@ body {
 
 header {
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 2.5rem;
 }
 
 h1 {
-    color: var(--primary-dark);
+    color: var(--primary);
     margin-bottom: 0.5rem;
-    font-size: 2.5rem;
+    font-size: 2.8rem;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
+    font-weight: 700;
 }
 
 .tagline {
-    color: var(--gray);
+    color: rgba(255, 255, 255, 0.7);
     font-size: 1.1rem;
 }
 
 .app-container {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 2rem;
+    gap: 2.5rem;
 }
 
 h2 {
-    color: var(--primary-dark);
-    border-bottom: 2px solid var(--light-gray);
+    color: var(--primary);
+    border-bottom: 2px solid var(--surface-light);
     padding-bottom: 0.75rem;
     margin-bottom: 1.5rem;
     font-size: 1.5rem;
     display: flex;
     align-items: center;
     gap: 0.75rem;
+    font-weight: 600;
 }
 
-/* Updated Button Styles */
+/* Button Styles */
 .btn {
     padding: 0.75rem 1.5rem;
     border: none;
-    border-radius: 8px;
+    border-radius: 12px;
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
@@ -90,35 +92,13 @@ h2 {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.btn::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.1);
-    transform: translateX(-100%);
-    transition: transform 0.3s ease;
+    background-color: var(--surface-light);
+    color: var(--on-surface);
 }
 
 .btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-}
-
-.btn:hover::after {
-    transform: translateX(0);
-}
-
-.btn:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .btn i {
@@ -128,7 +108,7 @@ h2 {
 /* Primary Button */
 .btn-primary {
     background-color: var(--primary);
-    color: white;
+    color: var(--on-primary);
 }
 
 .btn-primary:hover {
@@ -137,61 +117,55 @@ h2 {
 
 /* Success Button */
 .btn-success {
-    background-color: var(--success);
-    color: white;
+    background-color: var(--secondary);
+    color: var(--on-primary);
 }
 
 .btn-success:hover {
-    background-color: #38b6db;
-    background-image: linear-gradient(to right, #4cc9f0, #38b6db);
+    background-color: #00c9b3;
 }
 
 /* Warning Button */
 .btn-warning {
-    background-color: var(--warning);
-    color: white;
+    background-color: #ffb74d;
+    color: var(--on-primary);
 }
 
 .btn-warning:hover {
-    background-color: #e68a19;
-    background-image: linear-gradient(to right, #f8961e, #e68a19);
+    background-color: #ffa726;
 }
 
 /* Danger Button */
 .btn-danger {
-    background-color: var(--danger);
+    background-color: var(--error);
     color: white;
 }
 
 .btn-danger:hover {
-    background-color: #e5177b;
-    background-image: linear-gradient(to right, #f72585, #e5177b);
+    background-color: #b95567;
 }
 
 /* Mode Buttons */
 .mode-btn {
-    padding: 0.5rem 1.25rem;
+    padding: 0.6rem 1.5rem;
     border: none;
     border-radius: 20px;
-    background-color: var(--light);
-    color: var(--dark);
+    background-color: var(--surface-light);
+    color: var(--on-surface);
     cursor: pointer;
     transition: all 0.3s;
     font-size: 0.9rem;
     font-weight: 500;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .mode-btn:hover {
-    background-color: #e0e7ff;
-    transform: translateY(-1px);
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    background-color: rgba(187, 134, 252, 0.2);
 }
 
 .mode-btn.active {
     background-color: var(--primary);
-    color: white;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    color: var(--on-primary);
+    box-shadow: 0 2px 8px rgba(187, 134, 252, 0.3);
 }
 
 /* Task Action Buttons */
@@ -200,7 +174,8 @@ h2 {
     background: none;
     cursor: pointer;
     font-size: 1rem;
-    color: var(--gray);
+    color: var(--on-surface);
+    opacity: 0.7;
     transition: all 0.3s;
     width: 32px;
     height: 32px;
@@ -208,29 +183,29 @@ h2 {
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    background-color: rgba(0, 0, 0, 0.03);
 }
 
 .task-actions button:hover {
-    background-color: rgba(0, 0, 0, 0.08);
-    transform: scale(1.1);
+    opacity: 1;
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 .task-actions button:first-child:hover {
-    color: var(--success);
+    color: var(--secondary);
 }
 
 .task-actions button:last-child:hover {
-    color: var(--danger);
+    color: var(--error);
 }
 
 /* Timer Control Buttons */
 .timer-controls .btn {
-    min-width: 50px;
-    height: 50px;
+    min-width: 60px;
+    height: 60px;
     border-radius: 50%;
     padding: 0.5rem;
     justify-content: center;
+    font-size: 1.2rem;
 }
 
 .timer-controls .btn i {
@@ -247,20 +222,16 @@ h2 {
 .mode-btn:focus, 
 .task-actions button:focus {
     outline: none;
-    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.3);
+    box-shadow: 0 0 0 3px rgba(187, 134, 252, 0.3);
 }
 
 /* Disabled State */
 .btn:disabled {
-    background-color: #e9ecef;
-    color: #adb5bd;
+    background-color: #333;
+    color: #666;
     cursor: not-allowed;
     transform: none !important;
     box-shadow: none !important;
-}
-
-.btn:disabled::after {
-    display: none;
 }
 
 /* To-Do Section */
@@ -273,16 +244,22 @@ h2 {
 #task-input {
     flex-grow: 1;
     padding: 0.75rem 1rem;
-    border: 2px solid var(--light-gray);
-    border-radius: 8px;
+    border: 2px solid var(--surface-light);
+    border-radius: 12px;
     font-size: 1rem;
     transition: border-color 0.3s;
+    background-color: var(--surface-light);
+    color: var(--on-surface);
 }
 
 #task-input:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+    box-shadow: 0 0 0 3px rgba(187, 134, 252, 0.2);
+}
+
+#task-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
 }
 
 /* Task List */
@@ -292,7 +269,7 @@ h2 {
     max-height: 300px;
     overflow-y: auto;
     scrollbar-width: thin;
-    scrollbar-color: var(--primary) var(--light-gray);
+    scrollbar-color: var(--primary) var(--surface-light);
 }
 
 #task-list::-webkit-scrollbar {
@@ -300,7 +277,7 @@ h2 {
 }
 
 #task-list::-webkit-scrollbar-track {
-    background: var(--light-gray);
+    background: var(--surface-light);
     border-radius: 4px;
 }
 
@@ -313,8 +290,8 @@ h2 {
     display: flex;
     align-items: center;
     padding: 1rem;
-    background-color: var(--light);
-    border-radius: 8px;
+    background-color: var(--surface-light);
+    border-radius: 12px;
     margin-bottom: 0.75rem;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -323,18 +300,18 @@ h2 {
 
 #task-list li:hover {
     transform: translateX(4px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 #task-list li.selected {
-    background-color: #e0e7ff;
+    background-color: rgba(187, 134, 252, 0.15);
     border-left: 4px solid var(--primary);
     font-weight: 600;
 }
 
 #task-list li.completed .task-text {
     text-decoration: line-through;
-    color: var(--gray);
+    color: rgba(255, 255, 255, 0.5);
 }
 
 .task-text {
@@ -344,7 +321,7 @@ h2 {
 
 .pomodoro-count {
     background-color: var(--primary);
-    color: white;
+    color: var(--on-primary);
     padding: 0.25rem 0.75rem;
     border-radius: 20px;
     font-size: 0.8rem;
@@ -357,33 +334,6 @@ h2 {
     gap: 0.5rem;
 }
 
-.task-actions button {
-    border: none;
-    background: none;
-    cursor: pointer;
-    font-size: 1rem;
-    color: var(--gray);
-    transition: color 0.3s;
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-}
-
-.task-actions button:hover {
-    background-color: rgba(0, 0, 0, 0.05);
-}
-
-.task-actions button:first-child:hover {
-    color: var(--success);
-}
-
-.task-actions button:last-child:hover {
-    color: var(--danger);
-}
-
 /* Timer Section */
 .timer-container {
     display: flex;
@@ -392,7 +342,7 @@ h2 {
 }
 
 .task-display-container {
-    background-color: var(--light);
+    background-color: var(--surface-light);
     padding: 0.75rem 1.5rem;
     border-radius: 20px;
     margin-bottom: 1.5rem;
@@ -401,7 +351,7 @@ h2 {
 }
 
 #current-task-display {
-    color: var(--gray);
+    color: rgba(255, 255, 255, 0.7);
     font-style: italic;
     white-space: nowrap;
     overflow: hidden;
@@ -410,12 +360,13 @@ h2 {
 }
 
 #timer-display {
-    font-size: 5rem;
-    font-weight: bold;
-    color: var(--primary-dark);
+    font-size: 5.5rem;
+    font-weight: 700;
+    color: var(--primary);
     margin: 1.5rem 0;
     font-family: 'Courier New', monospace;
     letter-spacing: 2px;
+    text-shadow: 0 0 10px rgba(187, 134, 252, 0.3);
 }
 
 .timer-controls {
@@ -430,75 +381,86 @@ h2 {
     margin-top: 1rem;
 }
 
-.mode-btn {
-    padding: 0.5rem 1.25rem;
-    border: none;
-    border-radius: 20px;
-    background-color: var(--light);
-    color: var(--dark);
-    cursor: pointer;
-    transition: all 0.3s;
-    font-size: 0.9rem;
-    font-weight: 500;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+/* Empty State */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.5);
 }
 
-.mode-btn:hover {
-    background-color: #e0e7ff;
-    transform: translateY(-1px);
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+.empty-state i {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: var(--primary);
 }
 
-.mode-btn.active {
+/* Notification */
+.notification {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
     background-color: var(--primary);
-    color: white;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    color: var(--on-primary);
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1000;
+}
+
+.notification.show {
+    opacity: 1;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
+    .container {
+        padding: 1.5rem;
+        margin: 1rem;
+    }
+    
     .app-container {
         grid-template-columns: 1fr;
+        gap: 2rem;
     }
     
     #timer-display {
-        font-size: 3.5rem;
+        font-size: 4rem;
+    }
+    
+    .timer-controls .btn {
+        min-width: 50px;
+        height: 50px;
     }
 }
 
-/* Button Loading States */
-.btn-loading {
-    display: none;
-    margin-left: 0.5rem;
-}
-
-.btn.loading .btn-text {
-    display: none;
-}
-
-.btn.loading .btn-loading {
-    display: inline-block;
-}
-
-/* Pulse Animation for Active Timer */
+/* Pulse Animation for Timer */
 @keyframes pulse {
-    0% { box-shadow: 0 0 0 0 rgba(67, 97, 238, 0.4); }
-    70% { box-shadow: 0 0 0 10px rgba(67, 97, 238, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(67, 97, 238, 0); }
+    0% { 
+        box-shadow: 0 0 0 0 rgba(187, 134, 252, 0.4);
+        transform: scale(1);
+    }
+    50% { 
+        transform: scale(1.02);
+    }
+    70% { 
+        box-shadow: 0 0 0 10px rgba(187, 134, 252, 0);
+    }
+    100% { 
+        box-shadow: 0 0 0 0 rgba(187, 134, 252, 0);
+        transform: scale(1);
+    }
 }
 
-.btn.active {
-    position: relative;
-}
-
-.btn.active::before {
-    content: '';
-    position: absolute;
-    top: -2px;
-    left: -2px;
-    right: -2px;
-    bottom: -2px;
-    border-radius: 10px;
+.timer-controls .btn.active {
     animation: pulse 2s infinite;
-    z-index: -1;
 }
