@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "Synergy - Pomodoro Timer",
+  "version": "1.0",
+  "description": "A beautiful dark mode Pomodoro timer with task management",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png"
+    },
+    "default_title": "Open Synergy Timer",
+    "default_popup": "popup.html"
+  },
+  "permissions": ["storage", "notifications"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  }
+}

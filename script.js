@@ -15,27 +15,33 @@ let selectedTaskId = null;
 let timerInterval = null;
 let timeLeft = 25 * 60; // 25 minutes in seconds
 let isPaused = true;
-const notificationSound = new Audio('https://www.soundjay.com/buttons/sounds/button-16.mp3');
+let notificationSound = null;
 
 // Initialize the app
 function init() {
+    // Create notification sound using base64 encoded data
+    notificationSound = new Audio("data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbVtfdJivrJBhNjVgodDbq2EcBSt8t/LQfDcPABV2s/DMeDIMABFwru3JdTAKAAxrquvHcS0IAAhmpunFbywGAAJhoefDbisFAP5dnuXBbisFAPxcnOTBbisFAPpam+TBbisFAPhZmuPBbisFAPZZmeLBbisFAPRYmOHBbisFAPJXl+DBbisFAPBWlt/BbisFAO5Vld7BbisFAOxUk93BbisFAOpTktzBbisFAOhSkdvBbisFAOZRkNrBbisFAORQj9nBbisFAOJPjtnBbisFAOBOjdnBbisEAN5Ni9jBbisEANxMidfBbisEANpLiNbBbisEANhKhtXBbisEANZJhdTBbisEANRIg9PBbisEANJHgdLBbisEAM9Gf9HBbisEAM5FftDBbisEAMxEfM/BbisEAMpDes7BbisEAMlCeM3BbisEAMdBd8zBbisDAMVAdcvBbisDAMM/dMrBbisDAMFAc8nBbisDAL8/csnBbisDAL0+cMjBbisDALs9b8fBbisDALk8bsbBbisDALc7bcXBbisDALY6bMTBbisDALQ5a8PBbisDALI4asLBbisDALA3acHBbisDAK42aMDBbisDAKw1Z7/BbisDAKo0Zr7BbisDAKgzZb3BbisDAKYyZLzBbisDAKQxY7vBbisDAKIwYrrBbisDAKAvYbnBbisDAJ4uYLjBbisDAJwtX7fBbisDAJosXrbBbisDAJgrXbXBbisDAJYqXLTBbisDAJQpW7PBbisDAJIoWrLBbisDAJAnWbHBbisDAI4mV7DBbisDAI0lVq/BbisDAIskVa7BbisDAIkjVK3BbisDAIciU6zBbisDAIUhUqvBbisDAIMgUarBbisDAIEfUKnBbisDAH8eT6jBbisDAH0dTqfBbisDAHscTabBbisDAHkbTKXBbisDAHcaS6TBbisDAHUZSqPBbisDAHMYSSL");
+    
     loadTasks();
     renderTasks();
     updateTimerDisplay();
+    updateButtonStates();
     setupEventListeners();
 }
 
-// Load tasks from localStorage
+// Load tasks from chrome.storage
 function loadTasks() {
-    const savedTasks = localStorage.getItem('synergy-tasks');
-    if (savedTasks) {
-        tasks = JSON.parse(savedTasks);
-    }
+    chrome.storage.local.get(['synergy-tasks'], function(result) {
+        if (result['synergy-tasks']) {
+            tasks = JSON.parse(result['synergy-tasks']);
+            renderTasks();
+        }
+    });
 }
 
-// Save tasks to localStorage
+// Save tasks to chrome.storage
 function saveTasks() {
-    localStorage.setItem('synergy-tasks', JSON.stringify(tasks));
+    chrome.storage.local.set({'synergy-tasks': JSON.stringify(tasks)});
 }
 
 // === Task Management Functions ===
@@ -138,10 +144,6 @@ function selectTask(id) {
     renderTasks();
 }
 
-
-
-
-// Add to the existing script.js
 function updateButtonStates() {
     // Disable start button when timer is running
     startBtn.disabled = !isPaused;
@@ -159,7 +161,6 @@ function updateButtonStates() {
     }
 }
 
-// Modify the timer functions to call updateButtonStates
 function startTimer() {
     if (!selectedTaskId) {
         alert('Please select a task to focus on first!');
@@ -173,7 +174,9 @@ function startTimer() {
             updateTimerDisplay();
             if (timeLeft <= 0) {
                 clearInterval(timerInterval);
-                notificationSound.play();
+                if (notificationSound) {
+                    notificationSound.play();
+                }
                 showCompletionNotification();
                 incrementPomodoro();
                 resetTimer();
@@ -196,17 +199,6 @@ function resetTimer() {
     updateButtonStates();
 }
 
-// Call updateButtonStates in init function
-function init() {
-    loadTasks();
-    renderTasks();
-    updateTimerDisplay();
-    updateButtonStates();
-    setupEventListeners();
-}
-
-
-// === Timer Functions ===
 function updateTimerDisplay() {
     const minutes = Math.floor(timeLeft / 60);
     const seconds = timeLeft % 60;
@@ -214,22 +206,10 @@ function updateTimerDisplay() {
     
     // Visual feedback when time is running low
     if (timeLeft <= 60) {
-        timerDisplay.style.color = 'var(--danger)';
+        timerDisplay.style.color = 'var(--error)';
     } else {
-        timerDisplay.style.color = 'var(--primary-dark)';
+        timerDisplay.style.color = 'var(--primary)';
     }
-}
-
-
-function pauseTimer() {
-    isPaused = true;
-    clearInterval(timerInterval);
-}
-
-function resetTimer() {
-    pauseTimer();
-    timeLeft = 25 * 60; // Reset to 25 minutes
-    updateTimerDisplay();
 }
 
 function incrementPomodoro() {
@@ -243,6 +223,16 @@ function incrementPomodoro() {
 }
 
 function showCompletionNotification() {
+    // Create browser notification
+    chrome.notifications.create('pomodoroComplete', {
+        type: 'basic',
+        iconUrl: chrome.runtime.getURL('icons/icon48.png'),
+        title: 'Pomodoro Complete!',
+        message: 'Time for a break.',
+        priority: 2
+    });
+    
+    // Also show in-app notification
     const notification = document.createElement('div');
     notification.className = 'notification';
     notification.innerHTML = `
@@ -291,5 +281,5 @@ function setupEventListeners() {
     });
 }
 
-// Initialize the app
-init();
+// Initialize the app when DOM is loaded
+document.addEventListener('DOMContentLoaded', init);
