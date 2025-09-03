@@ -330,30 +330,34 @@
         }
 
         /* Task List */
-        #task-list {
+        #task-list, #bin-list {
             list-style: none;
             padding: 0;
             overflow-y: auto;
             flex-grow: 1;
             scrollbar-width: thin;
             scrollbar-color: var(--primary) rgba(255, 255, 255, 0.5);
+            max-height: 200px;
         }
 
-        #task-list::-webkit-scrollbar {
+        #task-list::-webkit-scrollbar,
+        #bin-list::-webkit-scrollbar {
             width: 8px;
         }
 
-        #task-list::-webkit-scrollbar-track {
+        #task-list::-webkit-scrollbar-track,
+        #bin-list::-webkit-scrollbar-track {
             background: rgba(255, 255, 255, 0.3);
             border-radius: 4px;
         }
 
-        #task-list::-webkit-scrollbar-thumb {
+        #task-list::-webkit-scrollbar-thumb,
+        #bin-list::-webkit-scrollbar-thumb {
             background-color: var(--primary);
             border-radius: 4px;
         }
 
-        #task-list li {
+        #task-list li, #bin-list li {
             display: flex;
             align-items: center;
             padding: 1rem;
@@ -365,7 +369,7 @@
             border-left: 4px solid transparent;
         }
 
-        #task-list li:hover {
+        #task-list li:hover, #bin-list li:hover {
             transform: translateX(4px);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
         }
@@ -495,6 +499,52 @@
             opacity: 1;
         }
 
+        /* Bin Section */
+        .bin-container {
+            background: var(--glass-light);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 32px var(--glass-shadow);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            margin-top: 1.5rem;
+            max-height: 200px;
+        }
+
+        .bin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .bin-toggle {
+            cursor: pointer;
+            color: var(--primary);
+            font-size: 1.2rem;
+            transition: transform 0.3s;
+        }
+
+        .bin-toggle.open {
+            transform: rotate(180deg);
+        }
+
+        .bin-content {
+            display: none;
+        }
+
+        .bin-content.show {
+            display: block;
+        }
+
+        #bin-list li {
+            background: rgba(255, 200, 200, 0.3);
+        }
+
         /* Responsive Design */
         @media (max-width: 968px) {
             .app-container {
@@ -595,6 +645,24 @@
                 <ul id="task-list">
                     <!-- Tasks will be rendered here -->
                 </ul>
+                
+                <!-- Bin Section -->
+                <div class="bin-container">
+                    <div class="bin-header">
+                        <h3><i class="fas fa-trash"></i> Bin</h3>
+                        <span class="bin-toggle"><i class="fas fa-chevron-down"></i></span>
+                    </div>
+                    <div class="bin-content">
+                        <ul id="bin-list">
+                            <!-- Deleted tasks will be rendered here -->
+                        </ul>
+                        <div class="bin-actions" style="margin-top: 1rem; text-align: center;">
+                            <button id="empty-bin-btn" class="btn btn-danger">
+                                <i class="fas fa-trash"></i> Empty Bin
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="timer-container">
@@ -624,6 +692,10 @@
         const taskInput = document.getElementById('task-input');
         const addTaskBtn = document.getElementById('add-task-btn');
         const taskList = document.getElementById('task-list');
+        const binList = document.getElementById('bin-list');
+        const binToggle = document.querySelector('.bin-toggle');
+        const binContent = document.querySelector('.bin-content');
+        const emptyBinBtn = document.getElementById('empty-bin-btn');
         const currentTaskDisplay = document.getElementById('current-task-display');
         const timerDisplay = document.getElementById('timer-display');
         const startBtn = document.getElementById('start-btn');
@@ -633,6 +705,7 @@
 
         // App State
         let tasks = [];
+        let deletedTasks = [];
         let selectedTaskId = null;
         let timerInterval = null;
         let timeLeft = 25 * 60; // 25 minutes in seconds
@@ -642,7 +715,9 @@
         // Initialize the app
         function init() {
             loadTasks();
+            loadDeletedTasks();
             renderTasks();
+            renderBinTasks();
             updateTimerDisplay();
             updateButtonStates();
             setupEventListeners();
@@ -656,9 +731,22 @@
             }
         }
 
+        // Load deleted tasks from localStorage
+        function loadDeletedTasks() {
+            const savedDeletedTasks = localStorage.getItem('synergy-deleted-tasks');
+            if (savedDeletedTasks) {
+                deletedTasks = JSON.parse(savedDeletedTasks);
+            }
+        }
+
         // Save tasks to localStorage
         function saveTasks() {
             localStorage.setItem('synergy-tasks', JSON.stringify(tasks));
+        }
+
+        // Save deleted tasks to localStorage
+        function saveDeletedTasks() {
+            localStorage.setItem('synergy-deleted-tasks', JSON.stringify(deletedTasks));
         }
 
         // === Task Management Functions ===
@@ -704,7 +792,7 @@
 
                 li.querySelector('.delete-btn').addEventListener('click', (e) => {
                     e.stopPropagation();
-                    deleteTask(task.id);
+                    moveTaskToBin(task.id);
                 });
 
                 li.addEventListener('click', () => {
@@ -712,6 +800,51 @@
                 });
                 
                 taskList.appendChild(li);
+            });
+        }
+
+        function renderBinTasks() {
+            binList.innerHTML = '';
+            
+            if (deletedTasks.length === 0) {
+                const emptyState = document.createElement('li');
+                emptyState.className = 'empty-state';
+                emptyState.innerHTML = `
+                    <i class="fas fa-trash"></i>
+                    <p>Bin is empty</p>
+                `;
+                binList.appendChild(emptyState);
+                return;
+            }
+
+            deletedTasks.forEach(task => {
+                const li = document.createElement('li');
+                li.setAttribute('data-id', task.id);
+
+                li.innerHTML = `
+                    <span class="task-text">${task.text}</span>
+                    <span class="pomodoro-count">${task.pomodoros} <i class="fas fa-clock"></i></span>
+                    <div class="task-actions">
+                        <button class="restore-btn" title="Restore">
+                            <i class="fas fa-undo"></i>
+                        </button>
+                        <button class="permanent-delete-btn" title="Permanently Delete">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                `;
+
+                li.querySelector('.restore-btn').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    restoreTask(task.id);
+                });
+
+                li.querySelector('.permanent-delete-btn').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    permanentDeleteTask(task.id);
+                });
+                
+                binList.appendChild(li);
             });
         }
 
@@ -743,15 +876,71 @@
             renderTasks();
         }
 
-        function deleteTask(id) {
-            tasks = tasks.filter(task => task.id !== id);
-            saveTasks();
-            if (selectedTaskId === id) {
-                selectedTaskId = null;
-                currentTaskDisplay.textContent = 'Select a task to begin';
-                resetTimer();
+        function moveTaskToBin(id) {
+            const taskIndex = tasks.findIndex(task => task.id === id);
+            if (taskIndex !== -1) {
+                const taskToDelete = tasks[taskIndex];
+                deletedTasks.push(taskToDelete);
+                tasks.splice(taskIndex, 1);
+                
+                saveTasks();
+                saveDeletedTasks();
+                
+                if (selectedTaskId === id) {
+                    selectedTaskId = null;
+                    currentTaskDisplay.textContent = 'Select a task to begin';
+                    resetTimer();
+                }
+                
+                renderTasks();
+                renderBinTasks();
+                
+                // Show notification
+                showNotification('Task moved to bin');
             }
-            renderTasks();
+        }
+
+        function restoreTask(id) {
+            const taskIndex = deletedTasks.findIndex(task => task.id === id);
+            if (taskIndex !== -1) {
+                const taskToRestore = deletedTasks[taskIndex];
+                tasks.push(taskToRestore);
+                deletedTasks.splice(taskIndex, 1);
+                
+                saveTasks();
+                saveDeletedTasks();
+                
+                renderTasks();
+                renderBinTasks();
+                
+                // Show notification
+                showNotification('Task restored');
+            }
+        }
+
+        function permanentDeleteTask(id) {
+            const taskIndex = deletedTasks.findIndex(task => task.id === id);
+            if (taskIndex !== -1) {
+                deletedTasks.splice(taskIndex, 1);
+                saveDeletedTasks();
+                renderBinTasks();
+                
+                // Show notification
+                showNotification('Task permanently deleted');
+            }
+        }
+
+        function emptyBin() {
+            if (deletedTasks.length > 0) {
+                if (confirm('Are you sure you want to permanently delete all tasks in the bin?')) {
+                    deletedTasks = [];
+                    saveDeletedTasks();
+                    renderBinTasks();
+                    
+                    // Show notification
+                    showNotification('Bin emptied');
+                }
+            }
         }
 
         function selectTask(id) {
@@ -860,6 +1049,27 @@
             }, 3000);
         }
 
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.innerHTML = `
+                <i class="fas fa-info-circle"></i>
+                <p>${message}</p>
+            `;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 10);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }, 2000);
+        }
+
         function setTimerMode(minutes) {
             timeLeft = minutes;
             resetTimer();
@@ -886,6 +1096,15 @@
                     setTimerMode(parseInt(button.dataset.time));
                 });
             });
+
+            // Bin toggle
+            binToggle.addEventListener('click', () => {
+                binContent.classList.toggle('show');
+                binToggle.classList.toggle('open');
+            });
+
+            // Empty bin button
+            emptyBinBtn.addEventListener('click', emptyBin);
         }
 
         // Initialize the app
