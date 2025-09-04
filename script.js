@@ -31,17 +31,17 @@ function init() {
 
 // Load tasks from chrome.storage
 function loadTasks() {
-    chrome.storage.local.get(['synergy-tasks'], function(result) {
-        if (result['synergy-tasks']) {
-            tasks = JSON.parse(result['synergy-tasks']);
-            renderTasks();
-        }
-    });
+  chrome.storage.local.get(['synergy-tasks'], function(result) {
+    if (result['synergy-tasks']) {
+      tasks = JSON.parse(result['synergy-tasks']);
+      renderTasks();
+    }
+  });
 }
 
 // Save tasks to chrome.storage
 function saveTasks() {
-    chrome.storage.local.set({'synergy-tasks': JSON.stringify(tasks)});
+  chrome.storage.local.set({'synergy-tasks': JSON.stringify(tasks)});
 }
 
 // === Task Management Functions ===

@@ -10,3 +10,10 @@ chrome.notifications.onClicked.addListener((notificationId) => {
     chrome.action.openPopup();
   }
 });
+
+// Handle extension icon click (optional - if you want additional functionality)
+chrome.action.onClicked.addListener((tab) => {
+  // You could add functionality here to open a full-page version
+  // or perform other actions when the icon is clicked
+  console.log('Extension icon clicked');
+});

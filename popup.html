@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Synergy Timer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Additional styles for popup sizing */
+        body {
+            width: 400px;
+            height: 500px;
+            overflow: hidden;
+        }
+        .container {
+            padding: 1rem;
+            max-height: 480px;
+            overflow-y: auto;
+        }
+        .app-container {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+        #timer-display {
+            font-size: 3rem;
+        }
+        .timer-controls .btn {
+            min-width: 45px;
+            height: 45px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-infinity"></i> Synergy</h1>
+            <p class="tagline">Your personal hub for focus and productivity.</p>
+        </header>
+
+        <div class="app-container">
+            <div class="todo-container">
+                <h2><i class="fa-solid fa-list-check"></i> My Tasks</h2>
+                <div class="todo-form">
+                    <input type="text" id="task-input" placeholder="Add a new task...">
+                    <button id="add-task-btn" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Add
+                    </button>
+                </div>
+                <ul id="task-list">
+                    <!-- Tasks will be rendered here -->
+                </ul>
+            </div>
+
+            <div class="timer-container">
+                <h2><i class="fa-solid fa-hourglass-half"></i> Timer</h2>
+                <div class="task-display-container">
+                    <p id="current-task-display">Select a task to begin</p>
+                </div>
+                <div id="timer-display">25:00</div>
+                <div class="timer-controls">
+                    <button id="start-btn" class="btn btn-success"><i class="fas fa-play"></i></button>
+                    <button id="pause-btn" class="btn btn-warning"><i class="fas fa-pause"></i></button>
+                    <button id="reset-btn" class="btn btn-danger"><i class="fas fa-redo"></i></button>
+                </div>
+                <div class="timer-modes">
+                    <button class="mode-btn active" data-time="1500">Pomodoro</button>
+                    <button class="mode-btn" data-time="300">Short Break</button>
+                    <button class="mode-btn" data-time="900">Long Break</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
